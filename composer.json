@@ -1,0 +1,28 @@
+{
+    "name": "digicomp/flow-symfony-bridge-messenger",
+    "type": "neos-package",
+    "description": "Flow dependency injection bridge to symfony/messenger",
+    "require": {
+        "neos/flow": "^6.3",
+        "symfony/doctrine-messenger": "^5.2.5",
+        "symfony/event-dispatcher": "^4.2 | ^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "DigiComp\\FlowSymfonyBridge\\Messenger\\": "Classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DigiComp\\FlowSymfonyBridge\\Messenger\\Tests\\": "Tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.0.x-dev"
+        },
+        "neos": {
+            "package-key": "DigiComp.FlowSymfonyBridge.Messenger"
+        }
+    }
+}

@@ -1,0 +1,142 @@
+DigiComp.FlowSymfonyBridge.Messenger:RoutableMessageBus:
+  className: 'Symfony\Component\Messenger\RoutableMessageBus'
+  arguments:
+    1:
+      object: 'DigiComp\FlowSymfonyBridge\Messenger\MessageBusContainer'
+    2:
+      object: 'Symfony\Component\Messenger\MessageBusInterface'
+
+Symfony\Component\Messenger\MessageBusInterface:
+  className: 'Symfony\Component\Messenger\MessageBus'
+  factoryObjectName: 'DigiComp\FlowSymfonyBridge\Messenger\MessageBusContainer'
+  factoryMethodName: 'get'
+  arguments:
+    1:
+      setting: 'DigiComp.FlowSymfonyBridge.Messenger.defaultBusName'
+
+DigiComp.FlowSymfonyBridge.Messenger:DefaultBusHandlersLocator:
+  className: 'Symfony\Component\Messenger\Handler\HandlersLocator'
+  factoryObjectName: 'DigiComp\FlowSymfonyBridge\Messenger\HandlersLocatorFactory'
+  factoryMethodName: 'create'
+  arguments:
+    1:
+      setting: 'DigiComp.FlowSymfonyBridge.Messenger.defaultBusName'
+
+DigiComp.FlowSymfonyBridge.Messenger:DefaultSendersLocator:
+  className: 'Symfony\Component\Messenger\Transport\Sender\SendersLocator'
+  arguments:
+    1:
+      # TODO: This would be the position were routes with bus specific routes could be merged
+      setting: 'DigiComp.FlowSymfonyBridge.Messenger.routing'
+    2:
+      object: 'DigiComp\FlowSymfonyBridge\Messenger\Transport\TransportsContainer'
+
+DigiComp.FlowSymfonyBridge.Messenger:DefaultAddBusNameStampMiddleware:
+  className: 'Symfony\Component\Messenger\Middleware\AddBusNameStampMiddleware'
+  arguments:
+    1:
+      setting: 'DigiComp.FlowSymfonyBridge.Messenger.defaultBusName'
+
+DigiComp.FlowSymfonyBridge.Messenger:DefaultHandleMessageMiddleware:
+  className: 'Symfony\Component\Messenger\Middleware\HandleMessageMiddleware'
+  arguments:
+    1:
+      object: 'DigiComp.FlowSymfonyBridge.Messenger:DefaultBusHandlersLocator'
+
+DigiComp.FlowSymfonyBridge.Messenger:DefaultSendMessageMiddleware:
+  className: 'Symfony\Component\Messenger\Middleware\SendMessageMiddleware'
+  arguments:
+    1:
+      object: 'DigiComp.FlowSymfonyBridge.Messenger:DefaultSendersLocator'
+    2:
+      object: 'DigiComp.FlowSymfonyBridge.Messenger:EventDispatcher'
+
+DigiComp.FlowSymfonyBridge.Messenger:TransportFactory:
+  className: 'Symfony\Component\Messenger\Transport\TransportFactory'
+  scope: 'singleton'
+  arguments:
+    1:
+      object: 'DigiComp.FlowSymfonyBridge.Messenger:DefaultTransportFactories'
+
+DigiComp.FlowSymfonyBridge.Messenger:DefaultTransportFactories:
+  className: 'DigiComp\FlowSymfonyBridge\Messenger\ObjectManagement\RewindableGenerator'
+  arguments:
+    1:
+      setting: 'DigiComp.FlowSymfonyBridge.Messenger.transportFactories'
+
+DigiComp.FlowSymfonyBridge.Messenger:SyncTransportFactory:
+  className: 'Symfony\Component\Messenger\Transport\Sync\SyncTransportFactory'
+  arguments:
+    1:
+      object: 'DigiComp.FlowSymfonyBridge.Messenger:RoutableMessageBus'
+
+DigiComp.FlowSymfonyBridge.Messenger:DefaultSerializer:
+  className: 'Symfony\Component\Messenger\Transport\Serialization\PhpSerializer'
+
+DigiComp.FlowSymfonyBridge.Messenger:SendersContainer:
+  className: 'DigiComp\FlowSymfonyBridge\Messenger\ObjectManagement\ChainedContainer'
+  scope: 'singleton'
+  arguments:
+    1:
+      object: 'DigiComp\FlowSymfonyBridge\Messenger\Transport\TransportsContainer'
+    # TODO: add own senders here, which are no transports
+
+DigiComp.FlowSymfonyBridge.Messenger:ReceiversContainer:
+  className: 'DigiComp\FlowSymfonyBridge\Messenger\ObjectManagement\ChainedContainer'
+  scope: 'singleton'
+  arguments:
+    1:
+      object: 'DigiComp\FlowSymfonyBridge\Messenger\Transport\TransportsContainer'
+    # TODO: add own receivers here, which are no transports
+
+DigiComp.FlowSymfonyBridge.Messenger:EventDispatcher:
+  className: 'Symfony\Component\EventDispatcher\EventDispatcher'
+  scope: 'singleton'
+  factoryObjectName: 'DigiComp\FlowSymfonyBridge\Messenger\EventDispatcherFactory'
+  factoryMethodName: 'create'
+
+DigiComp.FlowSymfonyBridge.Messenger:RestartSignalCache:
+  className: 'Neos\Cache\Frontend\FrontendInterface'
+  factoryObjectName: 'Neos\Flow\Cache\CacheManager'
+  factoryMethodName: 'getCache'
+  arguments:
+    1:
+      value: 'DigiComp_FlowSymfony_Bridge_Messenger_RestartSignal'
+
+DigiComp.FlowSymfonyBridge.Messenger:RestartSignalCachePool:
+  className: 'Neos\Cache\Psr\Cache\CachePool'
+  scope: 'singleton'
+  arguments:
+    1:
+      value: 'DigiComp_FlowSymfony_Bridge_Messenger_RestartSignal'
+    2:
+      object:
+        factoryObjectName: 'DigiComp.FlowSymfonyBridge.Messenger:RestartSignalCache'
+        factoryMethodName: 'getBackend'
+
+Symfony\Component\Messenger\EventListener\SendFailedMessageForRetryListener:
+  scope: 'singleton'
+  arguments:
+    1:
+      object:
+        name: 'DigiComp.FlowSymfonyBridge.Messenger:SendersContainer'
+    2:
+      object: 'DigiComp\FlowSymfonyBridge\Messenger\RetryStrategiesContainer'
+    3:
+      object: 'Psr\Log\LoggerInterface'
+    4:
+      object:
+        name: 'DigiComp.FlowSymfonyBridge.Messenger:EventDispatcher'
+
+Symfony\Component\Messenger\EventListener\SendFailedMessageToFailureTransportListener:
+  scope: 'singleton'
+  arguments:
+    1:
+      object:
+        factoryObjectName: 'DigiComp.FlowSymfonyBridge.Messenger:SendersContainer'
+        factoryMethodName: 'get'
+        arguments:
+          1:
+            setting:  'DigiComp.FlowSymfonyBridge.Messenger.failureTransport'
+    2:
+      object: 'Psr\Log\LoggerInterface'

@@ -1,0 +1,36 @@
+DigiComp:
+  FlowSymfonyBridge:
+    Messenger:
+      transports:
+        "test-in-memory-2":
+          dsn: "in-memory://"
+        "test-in-memory-1":
+          dsn: "in-memory://"
+        "test-doctrine":
+          dsn: "flow-doctrine://default?table_name=test_messenger_messages"
+        "test-sync":
+          dsn: "sync://"
+        "test-retry-doctrine":
+          dsn: "flow-doctrine://default?table_name=test_messenger_messages&queue_name=retry"
+          retryStrategy:
+            maxRetries: 1
+            # milliseconds delay
+            delay: 50
+            # causes the delay to be higher before each retry
+            # e.g. 1 second delay, 2 seconds, 4 seconds
+            multiplier: 2
+            maxDelay: 0
+            # override all of this with a service that
+            # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
+            # service: null
+        "test-failed-doctrine":
+          dsn: "flow-doctrine://default?table_name=test_messenger_messages&queue_name=failed"
+      failureTransport: "test-failed-doctrine"
+      routing:
+        DigiComp\FlowSymfonyBridge\Messenger\Tests\Functional\Fixtures\Message\TestMessage:
+          - "test-in-memory-1"
+          - "test-in-memory-2"
+          - "test-doctrine"
+          - "test-sync"
+        DigiComp\FlowSymfonyBridge\Messenger\Tests\Functional\Fixtures\Message\FailingMessage:
+          - "test-retry-doctrine"

@@ -1,0 +1,59 @@
+Neos:
+  Flow:
+    object:
+      includeClasses:
+        symfony.messenger:
+          - "Symfony\\\\Component\\\\Messenger\\\\EventListener\\\\.*"
+
+DigiComp:
+  FlowSymfonyBridge:
+    Messenger:
+      defaultBusName: "default"
+      defaultSerializerName: "DigiComp.FlowSymfonyBridge.Messenger:DefaultSerializer"
+      # TODO: use this
+      defaultRetryStrategyOptions:
+        maxRetries: 3
+        # milliseconds delay
+        delay: 1000
+        # causes the delay to be higher before each retry
+        # e.g. 1 second delay, 2 seconds, 4 seconds
+        multiplier: 2
+        maxDelay: 0
+        # override all of this with a service that
+        # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
+        service: null
+
+      eventDispatcher:
+        subscribers:
+          Symfony\Component\Messenger\EventListener\AddErrorDetailsStampListener: true
+          Symfony\Component\Messenger\EventListener\SendFailedMessageForRetryListener: true
+          Symfony\Component\Messenger\EventListener\SendFailedMessageToFailureTransportListener: true
+          DigiComp\FlowSymfonyBridge\Messenger\EventListener\StopWorkerOnRestartSignalListener: true
+
+      buses:
+        default:
+          middleware:
+            DigiComp.FlowSymfonyBridge.Messenger:DefaultAddBusNameStampMiddleware:
+              position: "start"
+            Symfony\Component\Messenger\Middleware\RejectRedeliveredMessageMiddleware: true
+            Symfony\Component\Messenger\Middleware\DispatchAfterCurrentBusMiddleware: true
+            Symfony\Component\Messenger\Middleware\FailedMessageProcessingMiddleware: true
+            DigiComp.FlowSymfonyBridge.Messenger:DefaultSendMessageMiddleware:
+              position: "end"
+            DigiComp.FlowSymfonyBridge.Messenger:DefaultHandleMessageMiddleware:
+              position: "end"
+      transportFactories:
+        DigiComp\FlowSymfonyBridge\Messenger\Transport\NullTransportFactory: true
+        DigiComp.FlowSymfonyBridge.Messenger:SyncTransportFactory: true
+        Symfony\Component\Messenger\Transport\InMemoryTransportFactory: true
+        DigiComp\FlowSymfonyBridge\Messenger\Transport\FlowDoctrineTransportFactory: true
+
+      transports:
+        discard:
+          dsn: "null://"
+
+      failureTransport: "discard"
+      # TODO: Receivers and Senders? (As far as I can see not possible in Symfony)
+      # receivers:[]
+      # senders: []
+      routing: []

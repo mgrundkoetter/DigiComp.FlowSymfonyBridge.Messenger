@@ -1,0 +1,3 @@
+DigiComp_FlowSymfony_Bridge_Messenger_RestartSignal:
+  frontend: 'Neos\Cache\Frontend\VariableFrontend'
+  backend: 'Neos\Cache\Backend\FileBackend'
