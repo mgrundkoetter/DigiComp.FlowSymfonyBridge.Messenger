@@ -25,10 +25,12 @@ DigiComp:
 
       eventDispatcher:
         subscribers:
+          DigiComp\FlowSymfonyBridge\Messenger\EventListener\StopWorkerOnRestartSignalListener: true
           Symfony\Component\Messenger\EventListener\AddErrorDetailsStampListener: true
           Symfony\Component\Messenger\EventListener\SendFailedMessageForRetryListener: true
           Symfony\Component\Messenger\EventListener\SendFailedMessageToFailureTransportListener: true
-          DigiComp\FlowSymfonyBridge\Messenger\EventListener\StopWorkerOnRestartSignalListener: true
+          Symfony\Component\Messenger\EventListener\DispatchPcntlSignalListener: true
+          Symfony\Component\Messenger\EventListener\StopWorkerOnSigtermSignalListener: true
 
       buses:
         default:
