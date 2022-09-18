@@ -4,6 +4,7 @@ namespace DigiComp\FlowSymfonyBridge\Messenger\Transport;
 
 use Doctrine\DBAL\Driver\AbstractPostgreSQLDriver;
 use Doctrine\ORM\EntityManagerInterface;
+use Neos\Flow\Annotations as Flow;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\PostgreSqlConnection;
@@ -11,7 +12,6 @@ use Symfony\Component\Messenger\Exception\TransportException;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
-use Neos\Flow\Annotations as Flow;
 
 /**
  * @Flow\Scope("singleton")
@@ -36,7 +36,7 @@ class FlowDoctrineTransportFactory implements TransportFactoryInterface
         try {
             $driverConnection = $this->entityManager->getConnection();
         } catch (\InvalidArgumentException $e) {
-            throw new TransportException(sprintf(
+            throw new TransportException(\sprintf(
                 'Could not find Doctrine connection from Messenger DSN "%s".',
                 $dsn
             ), 0, $e);
@@ -56,6 +56,6 @@ class FlowDoctrineTransportFactory implements TransportFactoryInterface
      */
     public function supports(string $dsn, array $options): bool
     {
-        return 0 === strpos($dsn, 'flow-doctrine://');
+        return 0 === \strpos($dsn, 'flow-doctrine://');
     }
 }

@@ -28,7 +28,7 @@ class RewindableGenerator implements \IteratorAggregate, \Countable
     public function __construct(array $serviceIds)
     {
         $this->serviceIds = $serviceIds;
-        $sortedServiceIds = array_keys(
+        $sortedServiceIds = \array_keys(
             (new PositionalArraySorter($serviceIds))->toArray()
         );
         $this->generator = function () use ($sortedServiceIds) {
@@ -38,7 +38,7 @@ class RewindableGenerator implements \IteratorAggregate, \Countable
                 }
                 $object = $this->objectManager->get($serviceId);
                 // TODO: Thats a quite poor solution to dynamically inject the logger - but it is easy
-                if (method_exists($object, 'setLogger')) {
+                if (\method_exists($object, 'setLogger')) {
                     $object->setLogger($this->objectManager->get(LoggerInterface::class));
                 }
                 yield $object;
@@ -55,6 +55,6 @@ class RewindableGenerator implements \IteratorAggregate, \Countable
 
     public function count()
     {
-        return count($this->serviceIds);
+        return \count($this->serviceIds);
     }
 }

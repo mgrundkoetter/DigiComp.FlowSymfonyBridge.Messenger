@@ -21,6 +21,6 @@ class NullTransportFactory implements TransportFactoryInterface
      */
     public function supports(string $dsn, array $options): bool
     {
-        return 0 === strpos($dsn, 'null://');
+        return 0 === \strpos($dsn, 'null://');
     }
 }

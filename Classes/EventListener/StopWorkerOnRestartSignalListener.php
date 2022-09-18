@@ -35,7 +35,7 @@ class StopWorkerOnRestartSignalListener implements EventSubscriberInterface
 
     public function onWorkerStarted(): void
     {
-        $this->workerStartedAt = microtime(true);
+        $this->workerStartedAt = \microtime(true);
     }
 
     public function onWorkerRunning(WorkerRunningEvent $event): void

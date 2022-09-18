@@ -28,7 +28,7 @@ class EventDispatcherFactory
         $eventDispatcher = new EventDispatcher();
 
         foreach ($this->configuration['eventDispatcher']['subscribers'] as $subscriberId => $enabled) {
-            if ($subscriberId === null || ! (bool) $enabled) {
+            if ($subscriberId === null || ! (bool)$enabled) {
                 continue;
             }
             $this->addLazySubscribers($eventDispatcher, $subscriberId);
@@ -39,7 +39,7 @@ class EventDispatcherFactory
     private function addLazySubscribers(EventDispatcherInterface $eventDispatcher, $subscriberId)
     {
         $subscriberClass = $this->objectManager->getClassNameByObjectName($subscriberId);
-        if (! is_a($subscriberClass, EventSubscriberInterface::class, true)) {
+        if (! \is_a($subscriberClass, EventSubscriberInterface::class, true)) {
             throw new \RuntimeException(
                 'Object with name ' . $subscriberId . ' is not an EventSubscriberInterface',
                 1618753949

@@ -84,18 +84,17 @@ class MessengerCommandController extends CommandController
             $this->receiverContainer,
             $this->eventDispatcher,
             $this->logger,
-            array_keys($this->configuration['transports'])
+            \array_keys($this->configuration['transports'])
         );
         $this->run($command);
     }
-
 
     /**
      * List all available receivers
      */
     public function listReceiversCommand()
     {
-        foreach (array_keys($this->configuration['transports']) as $transportName) {
+        foreach (\array_keys($this->configuration['transports']) as $transportName) {
             $this->outputLine('- ' . $transportName);
         }
     }
@@ -112,7 +111,7 @@ class MessengerCommandController extends CommandController
         $cacheItem = $this->restartSignalCachePool->getItem(
             StopWorkerOnRestartSignalListener::RESTART_REQUESTED_TIMESTAMP_KEY
         );
-        $cacheItem->set(microtime(true));
+        $cacheItem->set(\microtime(true));
         $this->restartSignalCachePool->save($cacheItem);
 
         //TODO: Add the possibility to wait until all are exited

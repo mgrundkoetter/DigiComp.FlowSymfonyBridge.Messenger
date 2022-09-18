@@ -36,7 +36,7 @@ class HandlersLocatorFactory
         $handlerDescriptors = [];
         foreach ($messageHandlerClasses as $messageHandlerClass) {
             foreach ($messageHandlerClass::getHandledMessages() as $messageName => $config) {
-                if (! is_array($config)) {
+                if (! \is_array($config)) {
                     throw new \InvalidArgumentException(
                         'different from doctrine, we (currently) need subscribers to always have an option array'
                     );

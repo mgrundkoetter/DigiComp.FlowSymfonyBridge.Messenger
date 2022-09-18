@@ -13,11 +13,11 @@ trait RunSymfonyCommandTrait
     protected function run(Command $command)
     {
         $definition = $command->getDefinition();
-        $definition->setArguments(array_merge(
+        $definition->setArguments(\array_merge(
             [new InputArgument('command', InputArgument::REQUIRED)],
             $definition->getArguments()
         ));
-        $definition->setOptions(array_merge(
+        $definition->setOptions(\array_merge(
             [
                 new InputOption('--verbose', '-v|vv|vvv', InputOption::VALUE_NONE, 'Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug'),
                 new InputOption('--quiet', '-q', InputOption::VALUE_NONE, 'Do not output any message'),
@@ -31,7 +31,7 @@ trait RunSymfonyCommandTrait
 
     protected function configureIO($input, $output)
     {
-        switch ($shellVerbosity = (int) getenv('SHELL_VERBOSITY')) {
+        switch ($shellVerbosity = (int)\getenv('SHELL_VERBOSITY')) {
             case -1:
                 $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
                 break;
@@ -82,7 +82,7 @@ trait RunSymfonyCommandTrait
             $input->setInteractive(false);
         }
 
-        putenv('SHELL_VERBOSITY=' . $shellVerbosity);
+        \putenv('SHELL_VERBOSITY=' . $shellVerbosity);
         $_ENV['SHELL_VERBOSITY'] = $shellVerbosity;
         $_SERVER['SHELL_VERBOSITY'] = $shellVerbosity;
     }

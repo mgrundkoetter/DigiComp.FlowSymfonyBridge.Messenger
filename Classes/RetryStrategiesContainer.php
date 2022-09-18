@@ -36,7 +36,7 @@ class RetryStrategiesContainer implements ContainerInterface
             throw new \InvalidArgumentException('Unknown transport name: ' . $id);
         }
         if (! isset($this->retryStrategies[$id])) {
-            $strategyDefinition = array_merge(
+            $strategyDefinition = \array_merge(
                 $this->configuration['defaultRetryStrategyOptions'],
                 $this->configuration['transports'][$id]['retryStrategy'] ?? []
             );

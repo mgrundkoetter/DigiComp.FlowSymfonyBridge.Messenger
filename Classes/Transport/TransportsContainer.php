@@ -42,23 +42,23 @@ class TransportsContainer implements ContainerInterface
             throw new \InvalidArgumentException('Unknown transport name: ' . $id);
         }
         if (! isset($this->transports[$id])) {
-            $transportDefinition = array_merge([
+            $transportDefinition = \array_merge([
                 'dsn' => '',
                 'options' => [],
                 'serializer' => $this->configuration['defaultSerializerName'],
-                # TODO: Probably this has to be setup elsewhere, as the transport does not care by itself
-                'retry_strategy' => [ # TODO: Make the default configurable
+                // TODO: Probably this has to be setup elsewhere, as the transport does not care by itself
+                'retry_strategy' => [ // TODO: Make the default configurable
                     'max_retries' => 3,
-                    # milliseconds delay
+                    // milliseconds delay
                     'delay' => 1000,
-                    # causes the delay to be higher before each retry
-                    # e.g. 1 second delay, 2 seconds, 4 seconds
+                    // causes the delay to be higher before each retry
+                    // e.g. 1 second delay, 2 seconds, 4 seconds
                     'multiplier' => 2,
                     'max_delay' => 0,
-                    # override all of this with a service that
-                    # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
+                    // override all of this with a service that
+                    // implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
                     'service' => null
-                ]
+                ],
             ], $this->configuration['transports'][$id]);
             $this->transports[$id] = $this->transportFactory->createTransport(
                 $transportDefinition['dsn'],
