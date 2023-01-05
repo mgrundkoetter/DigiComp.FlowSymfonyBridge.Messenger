@@ -32,6 +32,12 @@ class TransportsContainer implements ContainerInterface
     protected $transportFactory;
 
     /**
+     * @Flow\Inject
+     * @var FailureTransportContainer
+     */
+    protected $failureTransports;
+
+    /**
      * @var TransportInterface[]
      */
     protected array $transports;
@@ -65,6 +71,11 @@ class TransportsContainer implements ContainerInterface
                 $transportDefinition['options'],
                 $this->objectManager->get($transportDefinition['serializer'])
             );
+            if (isset($transportDefinition['failureTransport'])) {
+                $this->failureTransports->set($id, $this->get($transportDefinition['failureTransport']));
+            } elseif (isset($this->configuration['failureTransport'])) {
+                $this->failureTransports->set($id, $this->get($this->configuration['failureTransport']));
+            }
         }
         return $this->transports[$id];
     }
