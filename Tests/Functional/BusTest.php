@@ -6,6 +6,7 @@ use DigiComp\FlowSymfonyBridge\Messenger\Tests\Functional\Fixtures\Message\Faili
 use DigiComp\FlowSymfonyBridge\Messenger\Tests\Functional\Fixtures\Message\TestMessage;
 use DigiComp\FlowSymfonyBridge\Messenger\Transport\TransportsContainer;
 use Neos\Flow\Tests\FunctionalTestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -24,11 +25,11 @@ class BusTest extends FunctionalTestCase
         $messageBus->dispatch(new TestMessage('Hallo Welt!'));
         $sendersContainer = $this->objectManager->get(TransportsContainer::class);
 
-        /* @var InMemoryTransport $transport1 */
+        /** @var InMemoryTransport $transport1 */
         $transport1 = $sendersContainer->get('test-in-memory-1');
-        /* @var InMemoryTransport $transport2 */
+        /** @var InMemoryTransport $transport2 */
         $transport2 = $sendersContainer->get('test-in-memory-2');
-        /* @var DoctrineTransport $transport3 */
+        /** @var DoctrineTransport $transport3 */
         $transport3 = $sendersContainer->get('test-doctrine');
         $this->assertInstanceOf(InMemoryTransport::class, $transport1);
         $this->assertInstanceOf(InMemoryTransport::class, $transport2);
@@ -62,13 +63,14 @@ class BusTest extends FunctionalTestCase
         $messageBus->dispatch(new FailingMessage());
         $sendersContainer = $this->objectManager->get(TransportsContainer::class);
 
-        /* @var DoctrineTransport $transport1 */
+        /** @var DoctrineTransport $transport1 */
         $transport1 = $sendersContainer->get('test-retry-doctrine');
-        /* @var DoctrineTransport $failedTransport */
+        /** @var DoctrineTransport $failedTransport */
         $failedTransport = $sendersContainer->get('test-failed-doctrine');
         $this->assertCount(1, $transport1->all());
         $this->assertCount(0, $failedTransport->all());
 
+        /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->objectManager->get('DigiComp.FlowSymfonyBridge.Messenger:EventDispatcher');
         $eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(1));
         $worker = new Worker(
