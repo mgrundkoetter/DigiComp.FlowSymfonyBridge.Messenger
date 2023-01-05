@@ -54,23 +54,26 @@ class HandlersLocatorFactory
         $asHandlerClasses = $this->reflectionService
             ->getClassNamesByAnnotation(AsMessageHandler::class);
         foreach ($asHandlerClasses as $asHandlerClass) {
-            /** @var AsMessageHandler $annotation */
-            $annotation = $this->reflectionService->getClassAnnotation($asHandlerClass, AsMessageHandler::class);
-            $config['from_transport'] = $annotation->fromTransport;
-            $config['priority'] = $annotation->priority;
-            $method = $annotation->method ?? '__invoke';
-            $messageName = $annotation->handles;
-            if ($messageName === null) {
-                $arguments = $this->reflectionService->getMethodParameters($asHandlerClass, $method);
-                $messageName = $arguments[\array_key_first($arguments)]['class'];
+            /** @var AsMessageHandler[] $annotations */
+            $annotations = $this->reflectionService->getClassAnnotations($asHandlerClass, AsMessageHandler::class);
+            foreach ($annotations as $annotation) {
+                $config['from_transport'] = $annotation->fromTransport;
+                $config['priority'] = $annotation->priority;
+                $method = $annotation->method ?? '__invoke';
+                $messageName = $annotation->handles;
+                if ($messageName === null) {
+                    $arguments = $this->reflectionService->getMethodParameters($asHandlerClass, $method);
+                    $messageName = $arguments[\array_key_first($arguments)]['class'];
+                }
+                if ($annotation->bus !== null && $annotation->bus !== $busName) {
+                    continue;
+                }
+                $handler = $this->objectManager->get($asHandlerClass);
+                $handlerDescriptors[$messageName][] = new HandlerDescriptor(
+                    $this->objectManager->get($asHandlerClass),
+                    $config
+                );
             }
-            if ($annotation->bus !== null && $annotation->bus !== $busName) {
-                continue;
-            }
-            $handlerDescriptors[$messageName][] = new HandlerDescriptor(
-                $this->objectManager->get($asHandlerClass),
-                $config
-            );
         }
         // TODO: Maybe we can allow handlers to be added to bus or globally by configuration?
 
