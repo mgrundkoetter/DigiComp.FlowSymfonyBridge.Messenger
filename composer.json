@@ -1,6 +1,7 @@
 {
     "name": "digicomp/flow-symfony-bridge-messenger",
     "type": "neos-package",
+    "license": "MIT",
     "description": "Flow dependency injection bridge to symfony/messenger",
     "require": {
         "neos/flow": "^6.3",
