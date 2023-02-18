@@ -7,25 +7,17 @@ use Neos\Flow\Annotations as Flow;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\MessageBus;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class MessageBusContainer implements ContainerInterface
 {
-    /**
-     * @Flow\InjectConfiguration(path="buses")
-     * @var array
-     */
-    protected $configuration;
+    #[Flow\InjectConfiguration(path: 'buses')]
+    protected array $configuration;
 
     /**
      * @var MessageBus[]
      */
     protected array $buses = [];
 
-    /**
-     * @inheritDoc
-     */
     public function get(string $id)
     {
         if (! isset($this->buses[$id])) {
@@ -35,10 +27,7 @@ class MessageBusContainer implements ContainerInterface
         return $this->buses[$id];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function has(string $id)
+    public function has(string $id): bool
     {
         return isset($this->configuration[$id]);
     }

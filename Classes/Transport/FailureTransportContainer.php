@@ -6,9 +6,7 @@ use Neos\Flow\Annotations as Flow;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class FailureTransportContainer implements ContainerInterface
 {
     /**
@@ -21,12 +19,12 @@ class FailureTransportContainer implements ContainerInterface
         return $this->transports[$id];
     }
 
-    public function has(string $id)
+    public function has(string $id): bool
     {
         return isset($this->transports[$id]);
     }
 
-    public function set(string $id, TransportInterface $transport)
+    public function set(string $id, TransportInterface $transport): void
     {
         $this->transports[$id] = $transport;
     }

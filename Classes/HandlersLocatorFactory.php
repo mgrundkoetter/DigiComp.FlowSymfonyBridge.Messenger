@@ -12,25 +12,16 @@ use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 
 class HandlersLocatorFactory
 {
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
-    protected $configuration;
+    #[Flow\InjectConfiguration]
+    protected array $configuration;
 
-    /**
-     * @Flow\Inject
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
+    #[Flow\Inject(lazy: false)]
+    protected ObjectManagerInterface $objectManager;
 
-    /**
-     * @Flow\Inject
-     * @var ReflectionService
-     */
-    protected $reflectionService;
+    #[Flow\Inject(lazy: false)]
+    protected ReflectionService $reflectionService;
 
-    public function create($busName = 'default')
+    public function create($busName = 'default'): HandlersLocator
     {
         $messageHandlerClasses = $this->reflectionService
             ->getAllImplementationClassNamesForInterface(MessageSubscriberInterface::class);

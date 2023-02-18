@@ -8,34 +8,20 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class TransportsContainer implements ContainerInterface
 {
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
+    #[Flow\InjectConfiguration]
     protected array $configuration;
 
-    /**
-     * @Flow\Inject
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
+    #[Flow\Inject(lazy: false)]
+    protected ObjectManagerInterface $objectManager;
 
-    /**
-     * @Flow\Inject(name="DigiComp.FlowSymfonyBridge.Messenger:TransportFactory")
-     * @var TransportFactoryInterface
-     */
-    protected $transportFactory;
+    #[Flow\Inject(name: 'DigiComp.FlowSymfonyBridge.Messenger:TransportFactory', lazy: false)]
+    protected TransportFactoryInterface $transportFactory;
 
-    /**
-     * @Flow\Inject
-     * @var FailureTransportContainer
-     */
-    protected $failureTransports;
+    #[Flow\Inject(lazy: false)]
+    protected FailureTransportContainer $failureTransports;
 
     /**
      * @var TransportInterface[]
@@ -80,7 +66,7 @@ class TransportsContainer implements ContainerInterface
         return $this->transports[$id];
     }
 
-    public function has(string $id)
+    public function has(string $id): bool
     {
         return isset($this->configuration['transports'][$id]);
     }

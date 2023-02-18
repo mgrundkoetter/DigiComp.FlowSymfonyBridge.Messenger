@@ -10,7 +10,6 @@ DigiComp:
     Messenger:
       defaultBusName: "default"
       defaultSerializerName: "DigiComp.FlowSymfonyBridge.Messenger:DefaultSerializer"
-      # TODO: use this
       defaultRetryStrategyOptions:
         maxRetries: 3
         # milliseconds delay
@@ -19,8 +18,8 @@ DigiComp:
         # e.g. 1 second delay, 2 seconds, 4 seconds
         multiplier: 2
         maxDelay: 0
-        # override all of this with a service that
-        # implements Symfony\Component\Messenger\Retry\RetryStrategyInterface
+        # override all of this with a service that implements
+        # Symfony\Component\Messenger\Retry\RetryStrategyInterface
         service: null
 
       eventDispatcher:
@@ -55,7 +54,4 @@ DigiComp:
           dsn: "null://"
 
       failureTransport: "discard"
-      # TODO: Receivers and Senders? (As far as I can see not possible in Symfony)
-      # receivers:[]
-      # senders: []
       routing: []
