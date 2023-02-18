@@ -15,11 +15,8 @@ use Psr\Log\LoggerInterface;
  */
 class RewindableGenerator implements \IteratorAggregate, \Countable
 {
-    /**
-     * @Flow\Inject
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
+    #[Flow\Inject(lazy: false)]
+    protected ObjectManagerInterface $objectManager;
 
     private array $serviceIds;
 
@@ -46,14 +43,14 @@ class RewindableGenerator implements \IteratorAggregate, \Countable
         };
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         $g = $this->generator;
 
         return $g();
     }
 
-    public function count()
+    public function count(): int
     {
         return \count($this->serviceIds);
     }

@@ -17,47 +17,29 @@ class MessengerCommandController extends CommandController
 {
     use RunSymfonyCommandTrait;
 
-    /**
-     * @Flow\Inject(name="DigiComp.FlowSymfonyBridge.Messenger:RoutableMessageBus")
-     * @var RoutableMessageBus
-     */
-    protected $routableBus;
+    #[Flow\Inject(name: 'DigiComp.FlowSymfonyBridge.Messenger:RoutableMessageBus')]
+    protected RoutableMessageBus $routableBus;
 
-    /**
-     * @Flow\Inject(name="DigiComp.FlowSymfonyBridge.Messenger:ReceiversContainer")
-     * @var ContainerInterface
-     */
-    protected $receiverContainer;
+    #[Flow\Inject(name: 'DigiComp.FlowSymfonyBridge.Messenger:ReceiversContainer')]
+    protected ContainerInterface $receiverContainer;
 
-    /**
-     * @Flow\Inject(name="DigiComp.FlowSymfonyBridge.Messenger:EventDispatcher")
-     * @var EventDispatcherInterface
-     */
-    protected $eventDispatcher;
+    #[Flow\Inject(name: 'DigiComp.FlowSymfonyBridge.Messenger:EventDispatcher')]
+    protected EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @Flow\Inject(lazy=false)
-     * @var LoggerInterface
-     */
+    #[Flow\Inject]
     protected LoggerInterface $logger;
 
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
+    #[Flow\InjectConfiguration]
     protected array $configuration;
 
-    /**
-     * @Flow\Inject(name="DigiComp.FlowSymfonyBridge.Messenger:RestartSignalCachePool")
-     * @var CacheItemPoolInterface
-     */
-    protected $restartSignalCachePool;
+    #[Flow\Inject(name: 'DigiComp.FlowSymfonyBridge.Messenger:RestartSignalCachePool')]
+    protected CacheItemPoolInterface $restartSignalCachePool;
 
     /**
      * Consumes messages and dispatches them to the message bus
      *
      * To receive from multiple transports, pass each name:
-     * <info>worker:consume receiver1 receiver2</info>
+     * <info>messenger:consume receiver1 receiver2</info>
      *
      * Options are:
      *   --limit limits the number of messages received
@@ -71,7 +53,7 @@ class MessengerCommandController extends CommandController
      *
      * Optional arguments are -q (quiet) and -v[v[v]] (verbosity)
      */
-    public function consumeCommand()
+    public function consumeCommand(): void
     {
         if ($this->receiverContainer instanceof DependencyProxy) {
             $this->receiverContainer->_activateDependency();
@@ -92,7 +74,7 @@ class MessengerCommandController extends CommandController
     /**
      * List all available receivers
      */
-    public function listReceiversCommand()
+    public function listReceiversCommand(): void
     {
         foreach (\array_keys($this->configuration['transports']) as $transportName) {
             $this->outputLine('- ' . $transportName);
@@ -106,7 +88,7 @@ class MessengerCommandController extends CommandController
      * and then exit. Worker commands are *not* automatically restarted: that
      * should be handled by a process control system.
      */
-    public function stopWorkersCommand()
+    public function stopWorkersCommand(): void
     {
         $cacheItem = $this->restartSignalCachePool->getItem(
             StopWorkerOnRestartSignalListener::RESTART_REQUESTED_TIMESTAMP_KEY

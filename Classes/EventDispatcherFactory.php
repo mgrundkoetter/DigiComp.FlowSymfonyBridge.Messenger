@@ -11,19 +11,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 // TODO: Maybe an own package for EntityManager bridge?
 class EventDispatcherFactory
 {
-    /**
-     * @Flow\Inject
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
+    #[Flow\Inject(lazy: false)]
+    protected ObjectManagerInterface $objectManager;
 
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
-    protected $configuration;
+    #[Flow\InjectConfiguration]
+    protected array $configuration;
 
-    public function create()
+    public function create(): EventDispatcher
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -36,7 +30,7 @@ class EventDispatcherFactory
         return $eventDispatcher;
     }
 
-    private function addLazySubscribers(EventDispatcherInterface $eventDispatcher, $subscriberId)
+    private function addLazySubscribers(EventDispatcherInterface $eventDispatcher, $subscriberId): void
     {
         $subscriberClass = $this->objectManager->getClassNameByObjectName($subscriberId);
         if (! \is_a($subscriberClass, EventSubscriberInterface::class, true)) {

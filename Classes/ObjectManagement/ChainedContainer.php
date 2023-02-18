@@ -23,7 +23,7 @@ class ChainedContainer implements ContainerInterface
         throw new \InvalidArgumentException('Service id is unknown: ' . $id);
     }
 
-    public function has(string $id)
+    public function has(string $id): bool
     {
         foreach ($this->childContainers as $childContainer) {
             if ($childContainer->has($id)) {
