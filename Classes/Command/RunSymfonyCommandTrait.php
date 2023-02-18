@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 trait RunSymfonyCommandTrait
 {
-    protected function run(Command $command)
+    protected function run(Command $command): void
     {
         $definition = $command->getDefinition();
         $definition->setArguments(\array_merge(
@@ -29,7 +29,7 @@ trait RunSymfonyCommandTrait
         $command->run($input, $this->output->getOutput());
     }
 
-    protected function configureIO($input, $output)
+    protected function configureIO($input, $output): void
     {
         switch ($shellVerbosity = (int)\getenv('SHELL_VERBOSITY')) {
             case -1:

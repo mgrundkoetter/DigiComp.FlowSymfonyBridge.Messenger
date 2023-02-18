@@ -8,22 +8,14 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Retry\MultiplierRetryStrategy;
 use Symfony\Component\Messenger\Retry\RetryStrategyInterface;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class RetryStrategiesContainer implements ContainerInterface
 {
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
+    #[Flow\InjectConfiguration]
     protected array $configuration;
 
-    /**
-     * @Flow\Inject
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
+    #[Flow\Inject]
+    protected ObjectManagerInterface $objectManager;
 
     /**
      * @var RetryStrategyInterface[]
@@ -54,7 +46,7 @@ class RetryStrategiesContainer implements ContainerInterface
         return $this->retryStrategies[$id];
     }
 
-    public function has(string $id)
+    public function has(string $id): bool
     {
         return isset($this->configuration['transports'][$id]);
     }

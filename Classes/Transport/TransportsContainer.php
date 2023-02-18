@@ -8,28 +8,20 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class TransportsContainer implements ContainerInterface
 {
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
+    #[Flow\InjectConfiguration]
     protected array $configuration;
 
-    /**
-     * @Flow\Inject
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
+    #[Flow\Inject(lazy: false)]
+    protected ObjectManagerInterface $objectManager;
 
-    /**
-     * @Flow\Inject(name="DigiComp.FlowSymfonyBridge.Messenger:TransportFactory")
-     * @var TransportFactoryInterface
-     */
-    protected $transportFactory;
+    #[Flow\Inject(name: 'DigiComp.FlowSymfonyBridge.Messenger:TransportFactory', lazy: false)]
+    protected TransportFactoryInterface $transportFactory;
+
+    #[Flow\Inject(lazy: false)]
+    protected FailureTransportContainer $failureTransports;
 
     /**
      * @var TransportInterface[]
@@ -65,11 +57,16 @@ class TransportsContainer implements ContainerInterface
                 $transportDefinition['options'],
                 $this->objectManager->get($transportDefinition['serializer'])
             );
+            if (isset($transportDefinition['failureTransport'])) {
+                $this->failureTransports->set($id, $this->get($transportDefinition['failureTransport']));
+            } elseif (isset($this->configuration['failureTransport'])) {
+                $this->failureTransports->set($id, $this->get($this->configuration['failureTransport']));
+            }
         }
         return $this->transports[$id];
     }
 
-    public function has(string $id)
+    public function has(string $id): bool
     {
         return isset($this->configuration['transports'][$id]);
     }

@@ -14,16 +14,10 @@ class FailedCommandController extends CommandController
 {
     use RunSymfonyCommandTrait;
 
-    /**
-     * @Flow\Inject(name="DigiComp.FlowSymfonyBridge.Messenger:ReceiversContainer")
-     * @var ContainerInterface
-     */
-    protected $receiverContainer;
+    #[Flow\Inject(name: 'DigiComp.FlowSymfonyBridge.Messenger:ReceiversContainer')]
+    protected ContainerInterface $receiverContainer;
 
-    /**
-     * @Flow\InjectConfiguration
-     * @var array
-     */
+    #[Flow\InjectConfiguration]
     protected array $configuration;
 
     /**
@@ -39,7 +33,7 @@ class FailedCommandController extends CommandController
      *
      * Optional arguments are -q (quiet) -v[v[v]] (verbosity) and --force (do not ask)
      */
-    public function showCommand()
+    public function showCommand(): void
     {
         $command = new FailedMessagesShowCommand(
             $this->configuration['failureTransport'],
@@ -59,7 +53,7 @@ class FailedCommandController extends CommandController
      *
      * Optional arguments are -q (quiet) -v[v[v]] (verbosity) and --force (do not ask)
      */
-    public function removeCommand()
+    public function removeCommand(): void
     {
         $command = new FailedMessagesRemoveCommand(
             $this->configuration['failureTransport'],
@@ -87,7 +81,7 @@ class FailedCommandController extends CommandController
      *
      * @noinspection PhpParamsInspection
      */
-    public function retryCommand()
+    public function retryCommand(): void
     {
         $command = new FailedMessagesRetryCommand(
             $this->configuration['failureTransport'],

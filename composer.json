@@ -1,12 +1,12 @@
 {
     "name": "digicomp/flow-symfony-bridge-messenger",
     "type": "neos-package",
-    "license": "MIT",
     "description": "Flow dependency injection bridge to symfony/messenger",
     "require": {
-        "neos/flow": "^6.3",
-        "symfony/doctrine-messenger": "^5.2.5",
-        "symfony/event-dispatcher": "^4.2 | ^5.2"
+        "php": "^8.1",
+        "neos/flow": "^8.0",
+        "symfony/doctrine-messenger": "^6.2",
+        "symfony/event-dispatcher": "^4.2 | ^5.2 | ^6.2"
     },
     "autoload": {
         "psr-4": {
@@ -20,10 +20,26 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.0.x-dev"
+            "dev-master": "0.1.x-dev"
         },
         "neos": {
             "package-key": "DigiComp.FlowSymfonyBridge.Messenger"
         }
-    }
+    },
+    "authors": [
+        {
+            "name": "Ferdinand Kuhl",
+            "email": "f.kuhl@digital-competence.de",
+            "homepage": "https://www.digital-competence.de",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/digital-competence/DigiComp.FlowSymfonyBridge.Messenger",
+    "keywords": [
+        "Neos",
+        "Flow",
+        "symfony",
+        "messenger"
+    ]
 }

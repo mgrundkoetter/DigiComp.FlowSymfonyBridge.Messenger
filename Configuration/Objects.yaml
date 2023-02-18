@@ -89,6 +89,13 @@ DigiComp.FlowSymfonyBridge.Messenger:ReceiversContainer:
       object: 'DigiComp\FlowSymfonyBridge\Messenger\Transport\TransportsContainer'
     # TODO: add own receivers here, which are no transports
 
+DigiComp.FlowSymfonyBridge.Messenger:FailureSenderContainer:
+  className: 'DigiComp\FlowSymfonyBridge\Messenger\ObjectManagement\ChainedContainer'
+  scope: 'singleton'
+  arguments:
+    1:
+      object: 'DigiComp\FlowSymfonyBridge\Messenger\Transport\FailureTransportContainer'
+
 DigiComp.FlowSymfonyBridge.Messenger:EventDispatcher:
   className: 'Symfony\Component\EventDispatcher\EventDispatcher'
   scope: 'singleton'
@@ -133,10 +140,6 @@ Symfony\Component\Messenger\EventListener\SendFailedMessageToFailureTransportLis
   arguments:
     1:
       object:
-        factoryObjectName: 'DigiComp.FlowSymfonyBridge.Messenger:SendersContainer'
-        factoryMethodName: 'get'
-        arguments:
-          1:
-            setting:  'DigiComp.FlowSymfonyBridge.Messenger.failureTransport'
+        name: 'DigiComp.FlowSymfonyBridge.Messenger:FailureSenderContainer'
     2:
       object: 'Psr\Log\LoggerInterface'

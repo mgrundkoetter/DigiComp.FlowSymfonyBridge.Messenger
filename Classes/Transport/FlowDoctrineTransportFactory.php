@@ -13,9 +13,7 @@ use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class FlowDoctrineTransportFactory implements TransportFactoryInterface
 {
     private EntityManagerInterface $entityManager;
@@ -51,11 +49,8 @@ class FlowDoctrineTransportFactory implements TransportFactoryInterface
         return new DoctrineTransport($connection, $serializer);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function supports(string $dsn, array $options): bool
     {
-        return 0 === \strpos($dsn, 'flow-doctrine://');
+        return \str_starts_with($dsn, 'flow-doctrine://');
     }
 }
