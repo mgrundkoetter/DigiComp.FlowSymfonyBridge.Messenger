@@ -1,6 +1,6 @@
 # DigiComp.FlowSymfonyBridge.Messenger
 
-![Build status](https://ci.digital-competence.de/api/badges/Packages/DigiComp.FlowSymfonyBridge.Messenger/status.svg)
+![Build status](https://ci.digital-competence.de/api/badges/Packages/DigiComp.FlowSymfonyBridge.Messenger/status.svg?branch=main)
 
 This packages brings a DI configuration for the `symfony/messenger` component, so it can be used easily in `neos/flow` projects.
 
