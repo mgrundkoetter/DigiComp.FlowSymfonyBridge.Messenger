@@ -4,10 +4,8 @@ workspace:
 
 matrix:
   include:
-    - FLOW_VERSION: 7.3
-      PHP_VERSION: 8.0
     - FLOW_VERSION: 8.2
-      PHP_VERSION: 8.2
+      PHP_VERSION: 8.1
 
 pipeline:
   functional-tests:
