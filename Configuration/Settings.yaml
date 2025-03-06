@@ -46,7 +46,7 @@ DigiComp:
       transportFactories:
         DigiComp\FlowSymfonyBridge\Messenger\Transport\NullTransportFactory: true
         DigiComp.FlowSymfonyBridge.Messenger:SyncTransportFactory: true
-        Symfony\Component\Messenger\Transport\InMemoryTransportFactory: true
+        Symfony\Component\Messenger\Transport\InMemory\InMemoryTransportFactory: true
         DigiComp\FlowSymfonyBridge\Messenger\Transport\FlowDoctrineTransportFactory: true
 
       transports:
