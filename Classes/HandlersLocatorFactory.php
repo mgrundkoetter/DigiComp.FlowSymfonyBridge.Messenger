@@ -23,25 +23,7 @@ class HandlersLocatorFactory
 
     public function create($busName = 'default'): HandlersLocator
     {
-        $messageHandlerClasses = $this->reflectionService
-            ->getAllImplementationClassNamesForInterface(MessageSubscriberInterface::class);
         $handlerDescriptors = [];
-        foreach ($messageHandlerClasses as $messageHandlerClass) {
-            foreach ($messageHandlerClass::getHandledMessages() as $messageName => $config) {
-                if (! \is_array($config)) {
-                    throw new \InvalidArgumentException(
-                        'different from doctrine, we (currently) need subscribers to always have an option array'
-                    );
-                }
-                if (isset($config['bus']) && $config['bus'] !== $busName) {
-                    continue;
-                }
-                $handlerDescriptors[$messageName][] = new HandlerDescriptor(
-                    $this->objectManager->get($messageHandlerClass),
-                    $config
-                );
-            }
-        }
         $asHandlerClasses = $this->reflectionService
             ->getClassNamesByAnnotation(AsMessageHandler::class);
         foreach ($asHandlerClasses as $asHandlerClass) {
